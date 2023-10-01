@@ -20,7 +20,7 @@ def get_answer(input_text):
     token = config('TOKEN')
     embeddings = CohereEmbeddings()
 
-    db = FAISS.load_local("cohere_index", embeddings)
+    db = FAISS.load_local("new_cohere_index", embeddings)
 
     context = db.similarity_search(input_text)
 
@@ -30,7 +30,7 @@ def get_answer(input_text):
         print(i)
         context_str = context_str + i.page_content
 
-    temp_prompt = f"Only use the following context to answer the question. If you do not know the answer of the the question say I don't know. \n Context: %s" %(context_str)
+    temp_prompt = f"You are a chatbot made to answer user queries for the company Moveworks. Your job is to answer questions based on the context provided. All your knowledge only comes from the context given below. If you don't know the answer to a question just say, I don't know. Never give an answer you are not sure about. Give the output with proper formating.\n Context: %s" %(context_str)
     question_prompt = f"\n Question: %s \n Answer: " %(input_text)
     final_prompt = temp_prompt + question_prompt
 
