@@ -11,18 +11,18 @@ import os
 from langchain.document_loaders.base import Document
 import numpy
 from langchain.vectorstores import FAISS
+from decouple import config
 
-
-cohere_api_key = "4DdonhZUMBNF33FX2f65BN6TH1N1jZUYfgfoN7cZ"
-
-embeddings = CohereEmbeddings(cohere_api_key=cohere_api_key)
+os.environ["COHERE_API_KEY"] = config("COHERE_API_KEY") 
+database_id = config("DATABASE_ID")
+embeddings = CohereEmbeddings()
 
 batch_size = 400
 embedding_model = "cl100k_base"
 tokenizer = tiktoken.get_encoding('cl100k_base')
 
 loader = ApifyDatasetLoader(
-    dataset_id="NHU0onexDoHuD6DEW",
+    dataset_id="UBv6CB7eWkNR6VHO3",
     dataset_mapping_function=lambda dataset_item: Document(
         page_content=dataset_item["text"], metadata={"source": dataset_item["url"]}
     ),
@@ -52,4 +52,4 @@ for i in range(len(chunks)):
     str_list.append(chunks[i].page_content) 
 
 db = FAISS.from_texts(str_list, embeddings)
-db.save_local("cohere_index")
+db.save_local("new_cohere_index")
